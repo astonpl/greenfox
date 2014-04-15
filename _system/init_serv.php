@@ -52,5 +52,5 @@
 	
 	
 	Acfg('website',loadConf('website'));
-	print cfg('website','title');
+	Acfg('mysql',loadConf('mysql'));
 ?>

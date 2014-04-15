@@ -6,8 +6,8 @@
 		private $_prefix;
 		
 		public function __construct($host,$username,$password,$dbname){
-			@mysql_connect($host,$username,$password) or $this->_connected=false; 
-			@mysql_select_db($dbname) or $this->_connected=false; 
+			$this->_handle = @mysql_connect($host,$username,$password) or $this->_connected=false; 
+			@mysql_select_db($dbname,$this->_handle) or $this->_connected=false; 
 			//ToDoIt:
 		}
 		
@@ -15,7 +15,16 @@
 			return $this->_connected;
 		}
 		
+		public function getHandle(){
+			return $this->_handle;
+		}
+		
+		public function setPrefix($pr){
+			$this->_prefix = $pr;
+		}
+		
 		public function parseSQL($mask,$arg_list){
+			$mask= str_replace('%0',addslashes($this->_prefix),$mask);
 			for($i=0;$i<count($arg_list);$i++){
 				$mask= str_replace('%'.($i+1),addslashes($arg_list[$i]),$mask);
 			}
@@ -32,11 +41,10 @@
 		for($i=1;$i<$num;$i++){
 			$ar[] = $arg_list[$i];
 		}
-		print_r($ar); //ToDoIt:
-		return $_system_mysql->parseSQL($mask,$ar);
+		return mysql_query($_system_mysql->parseSQL($mask,$ar));
 	}
 	
 	$_system_mysql = new TMysql(cfg('mysql','host'),cfg('mysql','username'),cfg('mysql','password'),cfg('mysql','dbname'));
-	sqlQ("SELECT * FROM `%1` WHERE `id`='%2'","test",15);
-	var_dump($_system_mysql->isConnected());
+	$_system_mysql->setPrefix(cfg('mysql','prefix'));
+	echo(sqlQ("SELECT * FROM `%0%1` WHERE `id`='%2'","test",15));
 ?>

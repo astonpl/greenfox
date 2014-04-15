@@ -7,7 +7,7 @@
 			// This error code is not included in error_reporting
 			return;
 		}
-		print 'Error : '.$errno.' ['.$errstr.'] in <em>'.$errfile.'</em> on <em>'.$errline.'</em>';
+		print '<div>Error : '.$errno.' ['.$errstr.'] in <em>'.$errfile.'</em> on <em>'.$errline.'</em></div>';
 	}
 	
 	set_error_handler("ErrorHandler");

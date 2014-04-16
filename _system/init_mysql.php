@@ -6,9 +6,10 @@
 		private $_prefix;
 		
 		public function __construct($host,$username,$password,$dbname){
+			$this->_connected=true;
 			$this->_handle = @mysql_connect($host,$username,$password) or $this->_connected=false; 
 			@mysql_select_db($dbname,$this->_handle) or $this->_connected=false; 
-			//ToDoIt:
+			//ToDoIt: 
 		}
 		
 		public function isConnected(){
@@ -28,7 +29,7 @@
 			for($i=0;$i<count($arg_list);$i++){
 				$mask= str_replace('%'.($i+1),addslashes($arg_list[$i]),$mask);
 			}
-			print $mask; //ToDoIt:
+			return $mask; //ToDoIt:
 		}
 		
 	}
@@ -46,5 +47,8 @@
 	
 	$_system_mysql = new TMysql(cfg('mysql','host'),cfg('mysql','username'),cfg('mysql','password'),cfg('mysql','dbname'));
 	$_system_mysql->setPrefix(cfg('mysql','prefix'));
-	echo(sqlQ("SELECT * FROM `%0%1` WHERE `id`='%2'","test",15));
+	if(!$_system_mysql->isConnected()){
+		sendError("Mysql Error","Błąd połączenia z bazą danych","Sprawdz poprwaność danych zawartych w pliku konfiguracyjnego mysql.php");
+	}
+	
 ?>

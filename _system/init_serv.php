@@ -10,6 +10,11 @@
 		print '<div>Error : '.$errno.' ['.$errstr.'] in <em>'.$errfile.'</em> on <em>'.$errline.'</em></div>';
 	}
 	
+	function sendError($title,$desc,$code){
+		print '<div><h2>'.$title.'</h2><em>'.$desc.'</em><div><code>'.$code.'</code></div></div>';
+		exit;
+	}
+	
 	set_error_handler("ErrorHandler");
 	
 	function loadConf($name){
